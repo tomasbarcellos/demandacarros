@@ -48,6 +48,7 @@ Em função disso, vamos precisar 4 dados diferentes e de fontes diversas.
 
 ```{r}
 library(carrosbr)
+library(tidyverse)
 # p_j
 precos <- precos_fipe
 head(precos)
@@ -55,5 +56,59 @@ head(precos)
 # q_j
 quantidades <- emplacamento_anual
 head(quantidades)
+```
+
+Então podemos juntar os dados
+
+```{r}
+dados <- quantidades %>%
+  dplyr::mutate(
+    modelo = tolower(modelo) %>%
+      stringr::str_replace(" ", "-"),
+    montadora = tolower(montadora),
+    montadora = dplyr::case_when(
+      montadora == "gm" ~ "chevrolet",
+      montadora == "vw" ~ "volkswagen",
+      montadora == "vw/fox" ~ "volkswagen",
+      montadora == "vw/man" ~ "volkswagen",
+      montadora == "vw-trucks-e-bus" ~ "volkswagen",
+      montadora == "m.benz" ~ "mercedes-benz",
+      montadora == "caoa chery" ~ "caoa-chery",
+      TRUE ~ montadora
+    ),
+    modelo = dplyr::case_when(
+      modelo == "fox/cross-fox" ~ "fox",
+      modelo == "etios-hb" ~ "etios",
+      modelo == "yaris-hb" ~ "yaris",
+      modelo == "cruze-sedan" ~ "cruze",
+      modelo == "cruze-hb" ~ "cruze-sport6",
+      modelo == "hilux-sw4" ~ "sw4",
+      modelo == "space-fox" ~ "spacefox",
+      modelo == "crv" ~ "cr-v",
+      modelo == "206ws" ~ "206",
+      modelo == "city-hatch" ~ "city-hatchback",
+      modelo == "320i" ~ "serie-3",
+      montadora == "kia" & stringr::str_detect(modelo, "k\\d+") ~ "bongo",
+      stringr::str_detect(modelo, "sprinter-") ~ "sprinter",
+      montadora == "ford" & stringr::str_detect(modelo, "f(?=\\d+)") ~
+        stringr::str_replace(modelo, "f", "f-"),
+      montadora == "iveco" & stringr::str_detect(modelo, "daily-") ~ "daily",
+      TRUE ~ modelo
+    )) %>% 
+  left_join(precos, by = join_by(montadora, modelo, ano))
+
+head(dados)
+```
+
+E olhar para o seu formato
+
+```{r}
+ggplot(dados %>% filter(ano > 2020), aes(quantidade, preco)) + 
+  geom_point() + 
+  geom_smooth(method = "lm") + 
+  scale_x_log10() + 
+  scale_y_log10() +   
+  facet_wrap(~ano) +
+  theme_bw()
 ```
 
