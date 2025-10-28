@@ -24,14 +24,13 @@ Brasil.
 A ideia é rodar um BLP bem próximo do artigo original.
 A equação principal deve ser algo nesse sentido:
 
-$$
 q_{ji} = f(p_j, X_j, v_i)
-$$
-A ideia é que a quantidade consumida do carro de modelo $j$ seja função de:
 
-1. $p_j$: Preço do modelo $j$;
-1. $X_j$: Características observáveis do modelo $j$;
-1. $v_i$: Características observáveis do consumidor $i$.
+A ideia é que a quantidade consumida do carro de modelo _j_ seja função de:
+
+1. p_j: Preço do modelo _j_;
+1. X_j: Características observáveis do modelo _j_;
+1. v_i: Características observáveis do consumidor _i_.
 
 
 > Rever essas notações.
@@ -44,4 +43,17 @@ Em função disso, vamos precisar 4 dados diferentes e de fontes diversas.
 | Preço | Fipe |
 | Caracteísticas dos modelos | icarros + fichatecnica.com.br | 
 | Caracteísticas dos consumidors | PNADc |
+
+![](plano.png)
+
+```{r}
+library(carrosbr)
+# p_j
+precos <- precos_fipe
+head(precos)
+
+# q_j
+quantidades <- emplacamento_anual
+head(quantidades)
+```
 
