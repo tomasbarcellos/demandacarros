@@ -147,3 +147,24 @@ ggplot(dados %>% filter(ano > 2020), aes(quantidade, preco)) +
 ```
 
 <img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
+
+Olhar para marcas selecionadas
+
+``` r
+destaques <- c("byd", "fiat", "renault", "volkswagen", 
+               "toyota", "chevrolet")
+dados %>% 
+  filter(ano == 2024, montadora %in% destaques) %>% 
+  ggplot(aes(quantidade, preco, col = montadora)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", se = FALSE) + 
+  facet_wrap(~montadora) +
+  theme_bw()
+#> `geom_smooth()` using formula = 'y ~ x'
+#> Warning: Removed 3 rows containing non-finite outside the scale range
+#> (`stat_smooth()`).
+#> Warning: Removed 3 rows containing missing values or values outside the scale range
+#> (`geom_point()`).
+```
+
+<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
