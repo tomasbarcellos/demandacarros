@@ -112,3 +112,17 @@ ggplot(dados %>% filter(ano > 2020), aes(quantidade, preco)) +
   theme_bw()
 ```
 
+Olhar para marcas selecionadas
+
+```{r}
+destaques <- c("byd", "fiat", "renault", "volkswagen", 
+               "toyota", "chevrolet")
+dados %>% 
+  filter(ano == 2024, montadora %in% destaques) %>% 
+  ggplot(aes(quantidade, preco, col = montadora)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", se = FALSE) + 
+  facet_wrap(~montadora) +
+  theme_bw()
+```
+
